@@ -62,21 +62,22 @@ public class Game {
 	private void createLocations(){
 		/*
 		 * Parameter för outdoorsArea är: 
-		 * boolean north, boolean south, boolean west, boolean east, String shortDescription, String longDescription
+		 * boolean okNorth, boolean okSouth, boolean okWest, boolean okEast, String shortDescription, String longDescription
 		 * Med det menas kan man gå norr härifrån, söder härifrån osv..
 		 * shortDescription och longDescription är vad det låter som
 		 */
-		OutdoorsArea forest = new OutdoorsArea("forest", "long forest");
-		OutdoorsArea plains = new OutdoorsArea("plains", "long plains");
-		OutdoorsArea desert = new OutdoorsArea("desert", "long desert");
-		Room entrance = new Room("entrance", "long entrance");
-		Room kitchen = new Room("kitchen", "long kitchen");
+		OutdoorsArea forest = new OutdoorsArea(false, true, false ,false, "forest", "long forest");
+		OutdoorsArea plains = new OutdoorsArea(true, false, false, true, "plains", "long plains");
+		OutdoorsArea desert = new OutdoorsArea(false, false, true, true, "desert", "long desert");
+		Room entrance = new Room(false, true, true, false, "entrance", "long entrance");
+		Room kitchen = new Room(true, false, false, false, "kitchen", "long kitchen");
 		this.world[0] = forest;
 		this.world[1] = plains;
 		this.world[2] = desert;
 		this.world[3] = entrance;
 		this.world[4] = kitchen;	
 		/*
+		 * Var dom har en "connection", alltså vilka vägar dom kan gå till
 		 * 0 = norr, 1 = söderut, 2 = västerut, 3 = österut
 		 */
 		this.world[0].setPath(1, plains);
@@ -89,7 +90,9 @@ public class Game {
 		this.world[4].setPath(0, entrance);
 	}
 	
-	
+	/*
+	 * Returnerar en OK sträng, alltså "north", "south", "west" eller "east".
+	 */
 	private String getOkDirection(){
 		while(true){
 			String direction = this.sc.nextLine().toLowerCase();
@@ -101,52 +104,54 @@ public class Game {
 		}
 	}
 	
+	
+	/*
+	 * Går åt det hållet användaren vill gå om booleanen som säger att det är ok att gå är sann 
+	 * och om location finns i paths, alltså att den inte är null.
+	 * Programmet skriver annars ut att man inte kan gå åt det hållet
+	 */
 	private void movePlayer(String direction){
 		switch (direction){
 		case "north":
-			for(int i = 0; i < this.world.length; i++){
-				if(this.world[i].equals(this.player.getPosition())){
-					if(world[i].getPaths()[0] != null){
-						player.moveTo(world[i].getPaths()[0]);
-						break;
-					}
-				}	
+			if(this.player.getPosition().getOkNorth()){
+				this.findLocationAndMove(0);
+				return;
 			}
+			System.out.println("Can't move to the north.");
 			break;
 		case "south":
-			System.out.println("Nu vill vi gå söderut");
-			for(int i = 0; i < this.world.length; i++){
-				if(this.world[i].equals(this.player.getPosition())){
-					if(world[i].getPaths()[1] != null){
-						this.player.moveTo(world[i].getPaths()[1]);
-						break;
-					}
-				}	
+			if(this.player.getPosition().getOkSouth()){
+				this.findLocationAndMove(1);
+				return;
 			}
+			System.out.println("Can't move to the south.");
 			break;
 		case "west":
-			for(int i = 0; i < this.world.length; i++){
-				if(this.world[i].equals(this.player.getPosition())){
-					if(world[i].getPaths()[2] != null){
-						player.moveTo(world[i].getPaths()[2]);
-						break;
-					}
-				}	
+			if(this.player.getPosition().getOkWest()){
+				this.findLocationAndMove(2);
+				return;
 			}
+			System.out.println("Can't move to the west.");
 			break;
 		case "east":
-			for(int i = 0; i < this.world.length; i++){
-				if(this.world[i].equals(this.player.getPosition())){
-					if(world[i].getPaths()[3] != null){
-						player.moveTo(world[i].getPaths()[3]);
-						break;
-					}
-				}	
+			if(this.player.getPosition().getOkEast()){
+				this.findLocationAndMove(3);
+				return;
 			}
+			System.out.println("Can't move to the east.");
 			break;
-
 		}
-
+	}
+	
+	private void findLocationAndMove(int o){
+		for(int i = 0; i < world.length; i++){
+			if(this.world[i].equals(this.player.getPosition())){
+				if(world[i].getPaths()[o] != null){
+					this.player.moveTo(world[i].getPaths()[o]);
+					return;
+				}
+			}	
+		}
 	}
 	
 }

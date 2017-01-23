@@ -3,10 +3,10 @@ public class OutdoorsArea extends Location{
 
 	private String weather;
 
-	public OutdoorsArea(String shortDescription, String longDescription){
-
-		this.shortDescription = shortDescription;
-		this.longDescription = longDescription;
+	public OutdoorsArea(boolean n, boolean s, boolean w, boolean e, String shortDescription, String longDescription){
+		super(n,s, w, e);
+		this.setShortDescription(shortDescription);
+		this.setLongDescription(longDescription);
 	}
 	
 

@@ -4,9 +4,10 @@ public class Room extends Location {
 	private int size;
 
 	
-	public Room(String shortDescription, String longDescription){
-		this.shortDescription = shortDescription;
-		this.longDescription = longDescription;
+	public Room(boolean n, boolean s, boolean w, boolean e, String shortDescription, String longDescription){
+		super(n,s, w, e);
+		this.setShortDescription(shortDescription);
+		this.setLongDescription(longDescription);
 	}
 	
 //	@Override
