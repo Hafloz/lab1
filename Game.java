@@ -1,11 +1,11 @@
 import java.util.Scanner;
-
+import java.util.ArrayList;
 public class Game {
 
 	private Player player;
 	private Location[] world = new Location[5];
 	private Scanner sc = new Scanner(System.in);
-	
+	private ArrayList<String> commands = new ArrayList<String>();
 	
 	public Game(){
 		this.initStartup();
@@ -13,6 +13,7 @@ public class Game {
 		 * metod som skapar alla "locations" och lägger dom i arrayen world
 		 */
 		this.createLocations();
+		this.createAndGiveItems();
 		this.player.setLocation(this.world[0]);
 		this.run();
 	}
@@ -33,15 +34,34 @@ public class Game {
 			/*
 			 * Tar användar inmatning
 			 */
-			String direction = getOkDirection();
+			String command = getOkCommand();
 			/*
 			 * Försöker gå dit användaren vill
 			 */
-			this.movePlayer(direction);
+			this.executeCommand(command);
+		}
+	}
+	
+	private void executeCommand(String command){
+		if(command.equals("north")
+			|| command.equals("south")
+			|| command.equals("west")
+			|| command.equals("east")
+		){
+			this.movePlayer(command);
+		}else if(command.equals("help")){
+			System.out.println("Help");
+		}else if(command.equals("look")){
+			System.out.println("Look description");
+		}else if(command.equals("items")){
+			this.player.printItems();
+		}else{
+			System.out.println("gör något annat");
 		}
 	}
 	
 	private void initStartup(){
+		this.createCommands();
 		System.out.println("Welcome to the adventure game!");
 		System.out.println("What is your name? ");
 		/*
@@ -72,6 +92,7 @@ public class Game {
 		Room entrance = new Room(false, true, true, false, "entrance", "long entrance");
 		Room kitchen = new Room(true, false, false, false, "kitchen", "long kitchen");
 		this.world[0] = forest;
+		forest.addItem(new Tool(2.2, "lighter", 100));
 		this.world[1] = plains;
 		this.world[2] = desert;
 		this.world[3] = entrance;
@@ -93,13 +114,14 @@ public class Game {
 	/*
 	 * Returnerar en OK sträng, alltså "north", "south", "west" eller "east".
 	 */
-	private String getOkDirection(){
+	private String getOkCommand(){
 		while(true){
-			String direction = this.sc.nextLine().toLowerCase();
-			if(direction.equals("north") || direction.equals("south") || direction.equals("west") || direction.equals("east")){
-				return direction;
-			}else{
-				System.out.println("You need to type north, east, south or west.");
+			String command = this.sc.nextLine().toLowerCase();
+			String [] splitCommand = command.split(" ", 0);
+			for(String elem: this.commands){
+				if(splitCommand[0].equals(elem)){
+					return command;
+				}
 			}
 		}
 	}
@@ -152,6 +174,36 @@ public class Game {
 				}
 			}	
 		}
+	}
+	
+	private void createAndGiveItems(){
+		/*
+		 * Konstruktor för tool är följande:
+		 * double weight, String name, int price
+		 */
+		Tool shovel = new Tool(2.1, "shovel", 100);
+		this.player.setItem(shovel);
+		Tool torch = new Tool(1.0, "torch", 100);
+		this.player.setItem(torch);
+		/*
+		 * Konstruktor för wearable item är följande:
+		 * double weight, String name, int price
+		 */
+		WearableItem elven_robe = new WearableItem(3.0, "elven robe", 1000);
+		this.player.setItem(elven_robe);
+		
+	}
+	
+	private void createCommands(){
+		this.commands.add("north");
+		this.commands.add("south");
+		this.commands.add("west");
+		this.commands.add("east");
+		this.commands.add("help");
+		this.commands.add("items");
+		this.commands.add("look");
+		this.commands.add("wear");
+		
 	}
 	
 }

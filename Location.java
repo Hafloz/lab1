@@ -15,6 +15,8 @@ public abstract class Location {
 	private boolean okSouth;
 	private boolean okWest;
 	private boolean okEast;
+	//Får max finnas 5 items per ställe
+	private Item[] items = new Item[5];
 	
 	public Location(boolean north, boolean south, boolean west, boolean east){
 		if(north) this.okNorth = true;
@@ -29,6 +31,21 @@ public abstract class Location {
 		String description = (this.describedMyself) ? this.shortDescription : this.longDescription;
 		System.out.println(description);
 		this.describedMyself = true;
+		for(int i = 0; i < this.items.length; i++){
+			if(this.items[i] != null){
+				System.out.println("There is a/an " + this.items[i].getName() + " here.");
+			}
+		}
+	}
+	
+	public void addItem(Item item){
+		for(int i = 0; i < this.items.length; i++){
+			if(this.items[i] == null){
+				this.items[i] = item;
+				return;
+			}
+		}
+		System.out.println("Couldn't add item");
 	}
 	
 	public abstract void doCommand(String command);
