@@ -12,6 +12,14 @@ public class Player {
 	}
 	
 	public void moveTo(Location location){
-		
+		this.position = location;
+	}
+
+	public void setLocation(Location location) {
+		this.position = location;		
+	}
+	
+	public Location getPosition() {
+		return this.position;		
 	}
 }
