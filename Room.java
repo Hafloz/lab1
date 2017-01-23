@@ -9,6 +9,9 @@ public class Room extends Location {
 		
 	}
 
+	/*
+	 * jepp
+	 */
 	@Override
 	public void doCommand(String command) {
 		// TODO Auto-generated method stub
